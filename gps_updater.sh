@@ -21,9 +21,10 @@ if [ ! -d "$IMAGE_FOLDER" ]; then
     mkdir $IMAGE_FOLDER
 fi
 
-# Google Maps location data (in decimal degrees)
-LONGITUDE_DEC="${1//,/}"
-LATITUDE_DEC=$2
+# Processing coordinates and getting altitude
+RAW_LONGITUDE_ARG=${1:?"missing arg 1 for LONGITUDE"}
+LATITUDE_DEC=${2:?"missing arg 2 for LATITUDE"}
+LONGITUDE_DEC="${RAW_LONGITUDE_ARG//,/}"
 
 JSON=`curl -L -X GET "https://api.open-elevation.com/api/v1/lookup?locations=$LONGITUDE_DEC,$LATITUDE_DEC" --no-progress-meter`
 ALTITUDE=`jq -r -n --argjson data $JSON '$data.results[0].elevation'`
