@@ -4,9 +4,19 @@
 # GPS location updater using exiftool
 #
 
-# Define the folder containing images
-IMAGE_FOLDER="images"
+process_arguments() {
+    while [ -n "$1" ]
+    do
+        case $1 in
+            -h|--help) echo "GPS location updater script.\nCall with long,lat locations as arguments to update location data for image files in the images subdirectory."; exit 1;;
+        esac
+        shift
+    done
+}
 
+process_arguments "$@"
+
+IMAGE_FOLDER="images"
 if [ ! -d "$IMAGE_FOLDER" ]; then
     mkdir $IMAGE_FOLDER
 fi
@@ -44,7 +54,6 @@ LON_REF=$(awk -v lon="$LONGITUDE_DEC" 'BEGIN {print (lon < 0) ? "W" : "E"}')
 
 # Enable nullglob to avoid errors if no files match
 setopt NULL_GLOB
-echo "?"
 
 # Loop through and add GPS data if the file is an image
 for FILE in $IMAGE_FOLDER/*; do
