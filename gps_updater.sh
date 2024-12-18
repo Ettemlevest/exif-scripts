@@ -28,6 +28,7 @@ LONGITUDE_DEC="${RAW_LONGITUDE_ARG//,/}"
 
 JSON=`curl -L -X GET "https://api.open-elevation.com/api/v1/lookup?locations=$LONGITUDE_DEC,$LATITUDE_DEC" --no-progress-meter`
 ALTITUDE=`jq -r -n --argjson data $JSON '$data.results[0].elevation'`
+echo "Altitude for the given coordinates: $ALTITUDE"
 
 # Function to convert decimal degrees to degrees, minutes, and seconds
 convert_to_dms() {
