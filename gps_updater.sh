@@ -11,6 +11,9 @@ IMAGE_FOLDER="/tmp"
 LONGITUDE_DEC="${1//,/}"
 LATITUDE_DEC=$2
 
+JSON=`curl -L -X GET "https://api.open-elevation.com/api/v1/lookup?locations=$LONGITUDE_DEC,$LATITUDE_DEC" --no-progress-meter`
+ALTITUDE=`jq -r -n --argjson data $JSON '$data.results[0].elevation'`
+
 # Function to convert decimal degrees to degrees, minutes, and seconds
 convert_to_dms() {
   local DECIMAL=$1
