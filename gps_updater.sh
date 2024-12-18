@@ -26,7 +26,7 @@ RAW_LONGITUDE_ARG=${1:?"missing arg 1 for LONGITUDE"}
 LATITUDE_DEC=${2:?"missing arg 2 for LATITUDE"}
 LONGITUDE_DEC="${RAW_LONGITUDE_ARG//,/}"
 
-JSON=`curl -L -X GET "https://api.open-elevation.com/api/v1/lookup?locations=$LONGITUDE_DEC,$LATITUDE_DEC" --no-progress-meter`
+JSON=`curl -L -X GET "https://api.opentopodata.org/v1/test-dataset?locations=$LONGITUDE_DEC,$LATITUDE_DEC" --no-progress-meter`
 ALTITUDE=`jq -r -n --argjson data $JSON '$data.results[0].elevation'`
 echo "Altitude for the given coordinates: $ALTITUDE"
 
