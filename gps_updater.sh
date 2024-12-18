@@ -5,7 +5,11 @@
 #
 
 # Define the folder containing images
-IMAGE_FOLDER="/tmp"
+IMAGE_FOLDER="images"
+
+if [ ! -d "$IMAGE_FOLDER" ]; then
+    mkdir $IMAGE_FOLDER
+fi
 
 # Google Maps location data (in decimal degrees)
 LONGITUDE_DEC="${1//,/}"
