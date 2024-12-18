@@ -8,9 +8,8 @@
 IMAGE_FOLDER="/tmp"
 
 # Google Maps location data (in decimal degrees)
-LATITUDE_DEC="10"
-LONGITUDE_DEC="10"
-ALTITUDE="10.0"
+LONGITUDE_DEC="${1//,/}"
+LATITUDE_DEC=$2
 
 # Function to convert decimal degrees to degrees, minutes, and seconds
 convert_to_dms() {
