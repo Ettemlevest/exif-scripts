@@ -75,6 +75,24 @@ LONGITUDE_DMS=$(convert_to_dms "$LONGITUDE_DEC" "Longitude")
 LAT_REF=$(awk -v lat="$LATITUDE_DEC" 'BEGIN {print (lat < 0) ? "S" : "N"}')
 LON_REF=$(awk -v lon="$LONGITUDE_DEC" 'BEGIN {print (lon < 0) ? "W" : "E"}')
 
+
+IMAGE_FILES_COUNT=0
+for FILE in $IMAGE_FOLDER/*; do
+  if [[ $(exiftool -T -FileType "$FILE") =~ ^(JPEG|PNG|TIFF|GIF|WEBP|HEIC)$ ]]; then
+    ((IMAGE_FILES_COUNT++))
+  fi
+done
+
+echo "$IMAGE_FILES_COUNT images found"
+
+echo "Do you want to proceed? (y/n): "
+read CONFIRMATION
+
+if [[ "$CONFIRMATION" != "y" && "$CONFIRMATION" != "Y" ]]; then
+  echo "Operation canceled by the user."
+  exit 0
+fi
+
 # Enable nullglob to avoid errors if no files match
 setopt NULL_GLOB
 
