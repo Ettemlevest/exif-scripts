@@ -123,6 +123,15 @@ setopt NULL_GLOB
 UPDATED_FILES_COUNT=0
 for FILE in $IMAGE_FOLDER/*; do
   if [[ $(exiftool -T -FileType "$FILE") =~ ^(JPEG|PNG|TIFF|GIF|WEBP|HEIC)$ ]]; then
+    EXISTING_LAT=$(exiftool -GPSLatitude "$FILE" | awk -F': ' '{print $2}' | xargs)
+    EXISTING_LON=$(exiftool -GPSLongitude "$FILE" | awk -F': ' '{print $2}' | xargs)
+    EXISTING_ALT=$(exiftool -GPSAltitude "$FILE" | awk -F': ' '{print $2}' | xargs)
+
+    if [[ -n "$EXISTING_LAT" || -n "$EXISTING_LON" || -n "$EXISTING_ALT" ]]; then
+      echo "GPS data already exists for $FILE. Skipping..."
+      continue
+    fi
+
     exiftool -overwrite_original \
       -GPSLatitude="$LATITUDE_DMS" \
       -GPSLatitudeRef="$LAT_REF" \
