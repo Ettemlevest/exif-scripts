@@ -88,15 +88,22 @@ LONGITUDE_DMS=$(convert_to_dms "$LONGITUDE_DEC" "Longitude")
 LAT_REF=$(awk -v lat="$LATITUDE_DEC" 'BEGIN {print (lat < 0) ? "S" : "N"}')
 LON_REF=$(awk -v lon="$LONGITUDE_DEC" 'BEGIN {print (lon < 0) ? "W" : "E"}')
 
-
 IMAGE_FILES_COUNT=0
+IMAGES_WITH_LOCATION_COUNT=0
+
 for FILE in $IMAGE_FOLDER/*; do
   if [[ $(exiftool -T -FileType "$FILE") =~ ^(JPEG|PNG|TIFF|GIF|WEBP|HEIC)$ ]]; then
     ((IMAGE_FILES_COUNT++))
+    EXISTING_LAT=$(exiftool -GPSLatitude -T "$FILE")
+    EXISTING_LON=$(exiftool -GPSLongitude -T "$FILE")
+
+    if [[ -n "$EXISTING_LAT" && -n "$EXISTING_LON" ]]; then
+      ((IMAGES_WITH_LOCATION_COUNT++))
+    fi
   fi
 done
 
-echo "$IMAGE_FILES_COUNT images found"
+echo "$IMAGE_FILES_COUNT images found, $IMAGES_WITH_LOCATION_COUNT images have location data"
 echo " "
 
 echo "Do you want to proceed? (y/n): "
