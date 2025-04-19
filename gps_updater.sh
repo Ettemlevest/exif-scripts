@@ -3,6 +3,11 @@
 # GPS location updater using exiftool
 #
 
+# HELP:
+#   - to copy GPS coordinates from a source image to a target image:
+#     exiftool -TagsFromFile source.jpg -GPSLatitude -GPSLatitudeRef -GPSLongitude -GPSLongitudeRef -GPSAltitude target.jpg
+#     exiftool -TagsFromFile source.jpg -gps:all target.jpg
+
 #
 # Default values
 #
