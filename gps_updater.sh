@@ -17,6 +17,8 @@ while [[ "$#" -gt 0 ]]
 do case $1 in
     -c|--gps) GPS_COORDINATES="$2"
     shift;;
+    --overwrite) OVERWRITE=true
+    shift;;
     -f|--folder) IMAGE_FOLDER="$2"
     shift;;
     -h|--help)
@@ -128,8 +130,10 @@ for FILE in $IMAGE_FOLDER/*; do
     EXISTING_ALT=$(exiftool -GPSAltitude "$FILE" | awk -F': ' '{print $2}' | xargs)
 
     if [[ -n "$EXISTING_LAT" || -n "$EXISTING_LON" || -n "$EXISTING_ALT" ]]; then
-      echo "GPS data already exists for $FILE. Skipping..."
-      continue
+      if [[ "$OVERWRITE" != true ]]; then
+        echo "GPS data already exists for $FILE. Use --overwrite to update."
+        continue
+      fi
     fi
 
     exiftool -overwrite_original \
