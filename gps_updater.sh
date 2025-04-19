@@ -15,7 +15,13 @@ do case $1 in
     -f|--folder) IMAGE_FOLDER="$2"
     shift;;
     -h|--help)
-      echo "help text"
+      echo "Usage:"
+      echo "Manually add GPS coordinates to images:"
+      echo "  $0 --gps|c \"LAT,LONG\" --folder|-f \"FOLDER_PATH\""
+      echo " "
+      echo "  $0 --help|-h"
+      echo " "
+      echo "Supports Google Maps location informations, just copy it from Maps"
       exit 0;
     shift;;
     *) echo "Unknown parameter passed: $1"
@@ -45,11 +51,13 @@ echo "Working directory: $IMAGE_FOLDER"
 LONGITUDE_DEC=$(echo $GPS_COORDINATES | cut -d ',' -f 2 | xargs)
 LATITUDE_DEC=$(echo $GPS_COORDINATES | cut -d ',' -f 1 | xargs)
 
-echo "Parsed coordinates: $LONGITUDE_DEC, $LATITUDE_DEC"
+echo "Parsed coordinates:"
+echo "  Longitude: $LONGITUDE_DEC"
+echo "  Latitude:  $LATITUDE_DEC"
 
 JSON=`curl -L -X GET "https://api.opentopodata.org/v1/test-dataset?locations=$LONGITUDE_DEC,$LATITUDE_DEC" --no-progress-meter`
 ALTITUDE=`jq -r -n --argjson data $JSON '$data.results[0].elevation'`
-echo "Altitude for the given coordinates: $ALTITUDE"
+echo "  Altitude:  $ALTITUDE"
 
 # Function to convert decimal degrees to degrees, minutes, and seconds
 convert_to_dms() {
@@ -84,6 +92,7 @@ for FILE in $IMAGE_FOLDER/*; do
 done
 
 echo "$IMAGE_FILES_COUNT images found"
+echo " "
 
 echo "Do you want to proceed? (y/n): "
 read CONFIRMATION
